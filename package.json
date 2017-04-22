@@ -1,0 +1,71 @@
+{
+  "name": "@darkobits/interface",
+  "description": "Interfaces for JavaScript. Sort of.",
+  "version": "0.1.0",
+  "license": "WTFPL",
+  "contributors": [
+    {
+      "name": "Joshua Martin",
+      "email": "joshua@frontlawn.net"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darkobits/interface.git"
+  },
+  "engines": {
+    "npm": ">=4.x",
+    "node": ">=6.x"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/interface.js",
+  "browser": "dist/interface.min.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "lint": "xo",
+    "test": "jest --config jest.json",
+    "test:watch": "npm t -- --watch",
+    "test:coverage": "npm t -- --coverage && open ./coverage/lcov-report/index.html",
+    "prebuild": "run-p clean lint",
+    "build:unminified": "webpack --progress",
+    "build:minified": "webpack --env.min --progress",
+    "build": "run-p build:minified build:unminified",
+    "build:watch": "watch \"npm run build\" ./src/",
+    "depcheck": "npm-check --skip-unused --no-emoji || true",
+    "prepare": "run-p lint test build",
+    "prepush": "run-p lint test",
+    "prepublish": "run-p lint test build"
+  },
+  "xo": {
+    "env": [
+      "browser",
+      "jest"
+    ],
+    "space": true,
+    "rules": {
+      "no-multiple-empty-lines": "off",
+      "prefer-arrow-callback": "off",
+      "space-before-function-paren": [
+        "error",
+        {
+          "named": "always"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "babel-loader": "7.0.x",
+    "babel-preset-env": "1.4.x",
+    "eslint": "3.19.x",
+    "husky": "^0.13.3",
+    "jest": "19.x",
+    "npm-check": "5.4.x",
+    "npm-run-all": "4.x",
+    "rimraf": "2.6.x",
+    "watch": "1.x",
+    "webpack": "2.x",
+    "xo": "0.18.x"
+  }
+}
