@@ -45,6 +45,7 @@
     ],
     "space": true,
     "rules": {
+      "max-nested-callbacks": "off",
       "no-multiple-empty-lines": "off",
       "prefer-arrow-callback": "off",
       "space-before-function-paren": [
