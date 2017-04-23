@@ -38,6 +38,21 @@ function isTesting () {
 }
 
 
+/**
+ * Determines if the environment supports Symbols.
+ *
+ * @return {boolean}
+ */
+function supportsSymbols () {
+  try {
+    return Boolean(Symbol(null));
+  } catch (err) {
+    return false;
+  }
+}
+
+
+/**
  * Provides a fluent API for registering interface implementations on classes.
  * Enforces naive runtime checks to ensure interfaces are implemented and called
  * as intended.
@@ -58,7 +73,8 @@ export class Interface {
       ].join(' '));
     }
 
-    this.name = `@@${name}`;
+    this.name = name;
+    this.descriptor = supportsSymbols() ? Symbol.for(`@@${name}`) : `@@${name}`;
     this.argTypes = argTypes || [];
   }
 
@@ -77,7 +93,7 @@ export class Interface {
           // Simple arity-check using Any as a placeholder.
         } else if (this.argTypes[index] && !is(this.argTypes[index], arg)) {
           throw new Error([
-            `[${this.name}]`,
+            `[Interface: ${this.name}]`,
             `Expected argument ${index + 1} to be of type "${this.argTypes[index].name}"`,
             `but got "${typeof arg}".`
           ].join(' '));
@@ -88,7 +104,7 @@ export class Interface {
     }
 
     throw new Error([
-      `[${this.name}]`,
+      `[Interface: ${this.name}]`,
       `Must be invoked with at least ${this.argTypes.length}`,
       `argument${this.argTypes.length > 1 ? 's' : ''}.`
     ].join(' '));
@@ -103,7 +119,7 @@ export class Interface {
    * @return {boolean}
    */
   isImplementedBy (delegate) {
-    return Boolean(delegate[this.name]);
+    return Boolean(delegate[this.descriptor]);
   }
 
 
@@ -138,10 +154,10 @@ export class Interface {
           throw new Error(`[${i.name}] Expected implementation to have minimum arity of ${i.argTypes.length}.`);
         }
 
-        Object.defineProperty(delegate, i.name, {
+        Object.defineProperty(delegate, i.descriptor, {
           enumerable: false,
           configurable: false,
-          writable: Interface.isTesting(),
+          writable: isTesting(),
           value (...args) {
             return i.checkArguments(...args) && implementation.call(this, ...args);
           }
@@ -159,7 +175,7 @@ export class Interface {
    * @return {string}
    */
   toString () {
-    return this.name;
+    return this.descriptor;
   }
 }
 

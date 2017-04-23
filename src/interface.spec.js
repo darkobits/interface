@@ -212,35 +212,126 @@ describe('Interface', () => {
     });
   });
 
-  describe('isTesting', () => {
+  describe('Setting "writable" when testing', () => {
     let env;
 
     beforeEach(() => {
       env = process.env;
     });
 
-    it('should return true when process.env.NODE_ENV is "test"', () => {
+    it('should make implementations writable when process.env.NODE_ENV is "test"', () => {
       process.env.NODE_ENV = 'test';
-      expect(Interface.isTesting()).toBe(true);
+
+      const I = new Interface('Foo');
+
+      class Foo { }
+
+      const ret = 'bar';
+
+      I.implementedBy(Foo).as(function () {
+        return ret;
+      });
+
+      const myFoo = new Foo();
+
+      // Assert implementation works as expected.
+      expect(myFoo[I]()).toEqual(ret);
+
+      // Try to overwrite the implementation.
+      expect(() => {
+        myFoo[I] = false;
+      }).not.toThrow();
+
+      // Assert implementation was overwritten.
+      expect(myFoo[I]).toBe(false);
     });
 
-    it('should return false when process.env.NODE_ENV is not "test"', () => {
+    it('should make implementations non-writable when process.env.NODE_ENV is not "test"', () => {
       process.env.NODE_ENV = 'foo';
-      expect(Interface.isTesting()).toBe(false);
+
+      const I = new Interface('Foo');
+
+      class Foo { }
+
+      const ret = 'bar';
+
+      I.implementedBy(Foo).as(function () {
+        return ret;
+      });
+
+      const myFoo = new Foo();
+
+      // Assert implementation works as expected.
+      expect(myFoo[I]()).toEqual(ret);
+
+      // Try to overwrite the implementation.
+      expect(() => {
+        myFoo[I] = false;
+      }).toThrow('Cannot assign to read only property');
+
+      // Assert implementation not was overwritten.
+      expect(myFoo[I]()).toEqual(ret);
     });
 
-    it('should return false in the event of an error', () => {
+    it('should make implementations non-writable in the event of an error', () => {
       process.env = {
         get NODE_ENV () {
           throw new Error();
         }
       };
 
-      expect(Interface.isTesting()).toBe(false);
+      const I = new Interface('Foo');
+
+      class Foo { }
+
+      const ret = 'bar';
+
+      I.implementedBy(Foo).as(function () {
+        return ret;
+      });
+
+      const myFoo = new Foo();
+
+      // Assert implementation works as expected.
+      expect(myFoo[I]()).toEqual(ret);
+
+      // Try to overwrite the implementation.
+      expect(() => {
+        myFoo[I] = false;
+      }).toThrow('Cannot assign to read only property');
+
+      // Assert implementation not was overwritten.
+      expect(myFoo[I]()).toEqual(ret);
     });
 
     afterEach(() => {
       process.env = env;
+    });
+  });
+
+  describe('Using Symbols', () => {
+    const s = Symbol;
+
+    describe('when Symbol is supported', () => {
+      it('should use symbols for descriptors', () => {
+        const I = new Interface('Foo');
+        expect(typeof I.toString()).toEqual('symbol');
+      });
+    });
+
+    describe('when Symbol is not supported', () => {
+      beforeEach(() => {
+        Symbol = undefined; // eslint-disable-line no-global-assign
+      });
+
+      it('should use strings for descriptors', () => {
+        const I = new Interface('Foo');
+        expect(typeof I.toString()).toEqual('string');
+      });
+    });
+
+    afterEach(() => {
+      Symbol = s; // eslint-disable-line no-global-assign
     });
   });
 });
