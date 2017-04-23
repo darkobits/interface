@@ -10,83 +10,125 @@
 $ npm install @darkobits/interface
 ```
 
-The `Interface` class allows for the creation of contracts between an object and its consumers. Interfaces are constructed with a name and an optional list of argument types. This package also exports the `Any` value which can be used to indicate a desired arity of an interface's implementation without enforcing argument types.
+The `Interface` class allows for the creation of contracts between an object and its consumers. Interfaces are constructed with a name and an optional list of argument types. This package also exports the `Any` value which can be used to indicate a desired minimum arity of an interface's implementation without enforcing argument types.
 
 The value returned from the constructor can then be used in two ways:
 
-1. To implement the interface on classes/objects.
+1. To implement the interface on classes/objects using `implementedBy`.
 2. As a key that can be used to invoke the interface on objects that implement it.
 
 `Interface` performs a minimum arity check when implementations are registered and performs minimum arity and type-checking against invocations of implementations at runtime.
 
-Implementations are bound to their host objects, so in most cases arrow functions should not be used to define them.
+**Note:** Implementations are bound to their host objects, so in most cases arrow functions should not be used to define them.
 
-### Using with Classes
+## Using with Classes
 
-In most cases, it will be desirable to attach an interface to a class or
-prototype:
+When provided a class or constructor function, `Interface` will install implementations on its `prototype`. In most cases, this is desired.
 
 ```js
 import Interface from '@darkobits/interface';
 
-// Create a new interface, Foo, that should be invoked with one string argument.
-const Foo = new Interface('Foo', [String]);
+// Create a new interface, SetName, that should be used with one string argument.
+const SetName = new Interface('SetName', [String]);
 
-class Bar {
-  // ...
+class Person {
+  constructor () {
+    this.name = '';
+  }
+
+  getName () {
+    return this.name;
+  }
 }
 
 // This implementation doesn't meet the minimum arity for the interface, so it will throw an error:
-Foo.implementedBy(Bar).as(function () {
+SetName.implementedBy(Person).as(function () {
 
 });
 
 // This will pass:
-Foo.implementedBy(Bar).as(function (str) {
-  // 'this' is bound to the current instance of Bar.
-  // Do something with 'str'.
+SetName.implementedBy(Person).as(function (str) {
+  this.name = str;
 });
 
 // The interface can then be used thusly:
-const myBar = new Bar();
+const frodo = new Person();
 
-myBar[Foo]();      // Arity check will fail, this will throw an error.
-myBar[Foo](null);  // Type check will fail, this will throw an error.
-myBar[Foo]('baz'); // This will pass.
+frodo[SetName]();                // Arity check will fail, this will throw an error.
+frodo[SetName](null);            // Type check will fail, this will throw an error.
+frodo[SetName]('Frodo Baggins'); // This will pass.
 ```
 
-### Using with Instances
+## Using with Instances
 
-In some cases, the interface may need to have access to a constructor function's closure, in which case an interface may be implemented on a per-instance basis:
+In some cases, however, the interface may need to have access to a constructor function's closure. When passed an object, `Interface` will install the implementation onto the object directly.
 
 ```js
 import Interface from '@darkobits/interface';
 
-const Foo = new Interface('Foo', [String]);
+const SetName = new Interface('SetName', [String]);
 
-function Bar () {
-  // Private data.
-  let foo = '';
+function Person () {
+  let name = '';
 
-  this.getFoo = () => {
-    return foo;
+  this.getName = () => {
+    return name;
   };
 
-  Foo.implementedBy(this).as(function (str) {
-    // Mutate private data.
-    this.foo = str;
+  SetName.implementedBy(this).as(function (str) {
+    name = str;
   });
 }
 
-const myBar = new Bar();
-myBar[Foo]('baz');
+const frodo = new Person();
+frodo[SetName]('Frodo Baggins');
 ```
+
+## Using the `Any` Placeholder
+
+```js
+import {
+  Any,
+  Interface
+} from '@darkobits/interface';
+
+// Create an interface to set a key/value pair. Keys should be strings, but values can be anything.
+const SetData = new Interface('SetData', [String, Any]);
+
+class Model {
+  constructor () {
+    this.data = {};
+  }
+
+  getData (key) {
+    return this.data[key];
+  }
+}
+
+SetData.implementedBy(Model).as(function (key, value) {
+  this.data[key] = value;
+});
+
+const myModel = new Model();
+myModel[SetData]('someData', [1, 2, 3]);
+myModel[SetData]('otherData', 42);
+```
+
+## Caveats
+
+Because [*almost* everything in JavaScript is an object](https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch3.md#type), it is not possible to have robust type-checking at runtime. For example, strings constructed with the `String()` constructor will pass an `Object` type check, as will functions and arrays.
+
+## &nbsp;
+<p align="center">
+  <br>
+  <img width="22" height="22" src="https://cloud.githubusercontent.com/assets/441546/25318539/db2f4cf2-2845-11e7-8e10-ef97d91cd538.png">
+</p>
 
 [travis-img]: https://img.shields.io/travis/darkobits/interface/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/darkobits/interface
 [david-img]: https://img.shields.io/david/darkobits/interface.svg?style=flat-square
 [david-url]: https://david-dm.org/darkobits/interface
-[codacy-img]: https://img.shields.io/codacy/coverage/e3fb8e46d6a241f5a952cf3fe6a49d06.svg?style=flat-square
+[codacy-img]: https://img.shields.io/codacy/coverage/9784926ef8bd4cefb583aedcac7e00f2.svg?style=flat-square
 [codacy-url]: https://www.codacy.com/app/darkobits/interface
 [xo-img]: https://img.shields.io/badge/code_style-XO-e271a5.svg?style=flat-square
 [xo-url]: https://github.com/sindresorhus/xo
