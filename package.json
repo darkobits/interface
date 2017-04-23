@@ -28,15 +28,15 @@
     "test": "jest --config jest.json",
     "test:watch": "npm t -- --watch",
     "test:coverage": "npm t -- --coverage && open ./coverage/lcov-report/index.html",
-    "prebuild": "run-p clean lint",
+    "prebuild": "run-p clean lint test",
     "build:unminified": "webpack --progress",
     "build:minified": "webpack --env.min --progress",
     "build": "run-p build:minified build:unminified",
     "build:watch": "watch \"npm run build\" ./src/",
     "depcheck": "npm-check --skip-unused --no-emoji || true",
-    "prepare": "run-p lint test build",
-    "prepush": "run-p lint test",
-    "prepublish": "run-p lint test build"
+    "prepush": "npm run prebuild",
+    "prepare": "npm run build",
+    "prepublish": "npm run build"
   },
   "xo": {
     "env": [

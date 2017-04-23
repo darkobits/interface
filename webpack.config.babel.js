@@ -46,6 +46,11 @@ export default (env = {}) => {
     }));
   }
 
+  config.node = {
+    // Don't mock "process".
+    process: false
+  };
+
   config.bail = true;
 
   config.devtool = 'cheap-module-source-map';
