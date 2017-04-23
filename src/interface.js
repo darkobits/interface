@@ -23,6 +23,21 @@ function is (constructor, value) {
 
 
 /**
+ * Determines if we are in a testing environment or not.
+ *
+ * @private
+ *
+ * @return {boolean}
+ */
+function isTesting () {
+  try {
+    return typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
+  } catch (err) {
+    return false;
+  }
+}
+
+
  * Provides a fluent API for registering interface implementations on classes.
  * Enforces naive runtime checks to ensure interfaces are implemented and called
  * as intended.
@@ -145,18 +160,6 @@ export class Interface {
    */
   toString () {
     return this.name;
-  }
-
-
-  /**
-   * @return {boolean} - Whether we are in a testing environment or not.
-   */
-  static isTesting () {
-    try {
-      return typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
-    } catch (err) {
-      return false;
-    }
   }
 }
 
