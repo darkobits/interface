@@ -136,8 +136,6 @@ export class Interface {
   }
 
 
-
-
   /**
    * Implement a toString method that returns the interface's name. This allows
    * the interface instance to be used directly as a method name on objects that
