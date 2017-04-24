@@ -130,7 +130,7 @@ Because [*almost* everything in JavaScript is an object](https://github.com/geti
 [david-url]: https://david-dm.org/darkobits/interface
 [codacy-img]: https://img.shields.io/codacy/coverage/9784926ef8bd4cefb583aedcac7e00f2.svg?style=flat-square
 [codacy-url]: https://www.codacy.com/app/darkobits/interface
-[xo-img]: https://img.shields.io/badge/code_style-XO-e271a5.svg?style=flat-square
+[xo-img]: https://img.shields.io/badge/code_style-XO-f74c4c.svg?style=flat-square
 [xo-url]: https://github.com/sindresorhus/xo
 [npm-img]: https://img.shields.io/npm/v/@darkobits/interface.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/@darkobits/interface
