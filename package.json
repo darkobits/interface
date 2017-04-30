@@ -1,7 +1,7 @@
 {
   "name": "@darkobits/interface",
   "description": "Interfaces for JavaScript. Sort of.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "WTFPL",
   "contributors": [
     {
@@ -27,7 +27,7 @@
     "lint": "xo",
     "test": "jest --config jest.json",
     "test:watch": "npm t -- --watch",
-    "test:coverage": "npm t -- --coverage && open ./coverage/lcov-report/index.html",
+    "test:coverage": "npm t -- --coverage; open ./coverage/lcov-report/index.html",
     "prebuild": "run-p clean lint test",
     "build:unminified": "webpack --progress",
     "build:minified": "webpack --env.min --progress",
@@ -36,7 +36,8 @@
     "depcheck": "npm-check --skip-unused --no-emoji || true",
     "prepush": "npm run prebuild",
     "prepare": "npm run build",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "postpublish": "npm dist-tag ls"
   },
   "xo": {
     "env": [
