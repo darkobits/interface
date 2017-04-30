@@ -352,4 +352,30 @@ describe('Interface', () => {
       Symbol = s; // eslint-disable-line no-global-assign
     });
   });
+
+  describe('isImplementedBy', () => {
+    it('should return true if an object implements an interface', () => {
+      const I = new Interface('Foo');
+
+      class Foo { }
+      I.implementedBy(Foo).as(function () {});
+      expect(I.isImplementedBy(Foo)).toBe(true);
+
+      const myFoo = new Foo();
+      expect(I.isImplementedBy(myFoo)).toBe(true);
+
+      class Bar extends Foo { }
+      expect(I.isImplementedBy(Bar)).toBe(true);
+
+      const myBar = new Bar();
+      expect(I.isImplementedBy(myBar)).toBe(true);
+    });
+
+    it('should return false if an object does not implement an interface', () => {
+      const I = new Interface('Foo');
+
+      class Foo { }
+      expect(I.isImplementedBy(Foo)).toBe(false);
+    });
+  });
 });

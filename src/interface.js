@@ -118,7 +118,8 @@ export class Interface {
    * @param  {object|function|class} delegate
    * @return {boolean}
    */
-  isImplementedBy (delegate) {
+  isImplementedBy (obj) {
+    const delegate = is(Function, obj) ? obj.prototype : obj;
     return Boolean(delegate[this.descriptor]);
   }
 
