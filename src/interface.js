@@ -140,7 +140,7 @@ export class Interface {
         // prototype. Otherwise, use the instance itself.
         const delegate = is(Function, obj) ? obj.prototype : obj;
 
-        if (this.isImplementedBy(delegate)) {
+        if (Object.prototype.hasOwnProperty.call(delegate, i.descriptor)) {
           throw new Error(`[Interface] Delegate object already implements interface "${i.name}".`);
         }
 

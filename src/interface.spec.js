@@ -37,6 +37,24 @@ describe('Interface', () => {
       }).toThrow('Delegate object already implements interface');
     });
 
+    it('should not throw an error if an implementation exists in the prototype chain', () => {
+      const I = new Interface('Foo');
+
+      class Foo { }
+
+      I.implementedBy(Foo).as(function () {});
+
+      class Bar extends Foo { }
+
+      expect(() => {
+        I.implementedBy(Foo).as(function () {});
+      }).toThrow('Delegate object already implements interface');
+
+      expect(() => {
+        I.implementedBy(Bar).as(function () {});
+      }).not.toThrow();
+    });
+
     it('should throw if passed an implementation that is not a function', () => {
       const I = new Interface('Foo');
 
