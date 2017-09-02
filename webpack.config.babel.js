@@ -1,7 +1,6 @@
-import path from 'path';
+import {resolve} from 'path';
 import webpack from 'webpack';
 
-const resolve = path.resolve;
 const CONTEXT = resolve(__dirname, 'src');
 
 
@@ -16,7 +15,7 @@ export default (env = {}) => {
 
   config.output = {
     path: resolve(__dirname, 'dist'),
-    filename: `interface${env.min ? '.min' : ''}.js`,
+    filename: env.min ? 'interface.min.js' : 'interface.js',
     sourceMapFilename: '[file].map',
     library: 'Interface',
     libraryTarget: 'umd'
@@ -53,7 +52,7 @@ export default (env = {}) => {
 
   config.bail = true;
 
-  config.devtool = 'cheap-module-source-map';
+  config.devtool = 'source-map';
 
   return config;
 };

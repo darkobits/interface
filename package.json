@@ -23,21 +23,33 @@
   "main": "dist/interface.js",
   "browser": "dist/interface.min.js",
   "scripts": {
-    "clean": "rimraf dist",
     "lint": "xo",
-    "test": "jest --config jest.json",
+    "test": "jest",
     "test:watch": "npm t -- --watch",
-    "test:coverage": "npm t -- --coverage; open ./coverage/lcov-report/index.html",
-    "prebuild": "run-p clean lint test",
+    "test:coverage": "npm t -- --coverage",
+    "prebuild": "rimraf dist",
     "build:unminified": "webpack --progress",
     "build:minified": "webpack --env.min --progress",
     "build": "run-p build:minified build:unminified",
     "build:watch": "watch \"npm run build\" ./src/",
-    "depcheck": "npm-check --skip-unused --no-emoji || true",
-    "prepush": "npm run prebuild",
-    "prepare": "npm run build",
-    "prepublish": "npm run build",
-    "postpublish": "npm dist-tag ls"
+    "prepublish": "run-p lint test build",
+    "postpublish": "npm dist-tag ls",
+    "prebump": "npm run prepublish",
+    "bump": "standard-version"
+  },
+  "devDependencies": {
+    "babel-loader": "7.x",
+    "babel-preset-env": "1.x",
+    "eslint": "4.x",
+    "husky": "0.14.x",
+    "jest": "20.x",
+    "npm-check": "5.x",
+    "npm-run-all": "4.x",
+    "rimraf": "2.x",
+    "standard-version": "4.x",
+    "watch": "1.x",
+    "webpack": "3.x",
+    "xo": "0.18.x"
   },
   "xo": {
     "env": [
@@ -56,18 +68,5 @@
         }
       ]
     }
-  },
-  "devDependencies": {
-    "babel-loader": "7.0.x",
-    "babel-preset-env": "1.4.x",
-    "eslint": "3.19.x",
-    "husky": "^0.13.3",
-    "jest": "19.x",
-    "npm-check": "5.4.x",
-    "npm-run-all": "4.x",
-    "rimraf": "2.6.x",
-    "watch": "1.x",
-    "webpack": "2.x",
-    "xo": "0.18.x"
   }
 }
