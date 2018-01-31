@@ -327,32 +327,6 @@ describe('Interface', () => {
     });
   });
 
-  describe('Using Symbols', () => {
-    const s = Symbol;
-
-    describe('when Symbol is supported', () => {
-      it('should use symbols for descriptors', () => {
-        const I = new Interface('Foo');
-        expect(typeof I.toString()).toEqual('symbol');
-      });
-    });
-
-    describe('when Symbol is not supported', () => {
-      beforeEach(() => {
-        Symbol = undefined; // eslint-disable-line no-global-assign
-      });
-
-      it('should use strings for descriptors', () => {
-        const I = new Interface('Foo');
-        expect(typeof I.toString()).toEqual('string');
-      });
-    });
-
-    afterEach(() => {
-      Symbol = s; // eslint-disable-line no-global-assign
-    });
-  });
-
   describe('isImplementedBy', () => {
     it('should return true if an object implements an interface', () => {
       const I = new Interface('Foo');

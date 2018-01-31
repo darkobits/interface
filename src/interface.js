@@ -39,20 +39,6 @@ function isTesting () {
 
 
 /**
- * Determines if the environment supports Symbols.
- *
- * @return {boolean}
- */
-function supportsSymbols () {
-  try {
-    return Boolean(Symbol(null));
-  } catch (err) {
-    return false;
-  }
-}
-
-
-/**
  * Provides a fluent API for registering interface implementations on classes.
  * Enforces naive runtime checks to ensure interfaces are implemented and called
  * as intended.
@@ -74,7 +60,7 @@ export class Interface {
     }
 
     this.name = name;
-    this.descriptor = supportsSymbols() ? Symbol.for(`@@${name}`) : `@@${name}`;
+    this.descriptor = `@@${name}`;
     this.argTypes = argTypes || [];
   }
 
