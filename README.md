@@ -1,13 +1,11 @@
-# interface
+![interface](https://user-images.githubusercontent.com/441546/36626691-02397db2-18ec-11e8-8e13-4ed88597149f.png)
 
-[![travis][travis-img]][travis-url] [![david][david-img]][david-url] [![codacy][codacy-img]][codacy-url] [![minified][minified-img]][unpkg-url] [![gzipped][gzipped-img]][unpkg-url] [![Code Style][xo-img]][xo-url] [![NPM Version][npm-img]][npm-url]
+[![NPM Version][npm-img]][npm-url] [![travis][travis-img]][travis-url] [![codacy][codacy-img]][codacy-url] [![david][david-img]][david-url] [![Code Style][xo-img]][xo-url] 
 
-> Interfaces for JavaScript. Sort of.
-
-## Setup
+## Install
 
 ```bash
-$ npm install @darkobits/interface
+$ npm i @darkobits/interface
 ```
 
 The `Interface` class allows for the creation of contracts between an object and its consumers. Interfaces are constructed with a name and an optional list of argument types. This package also exports the `Any` value which can be used to indicate a desired minimum arity of an interface's implementation without enforcing argument types.
@@ -129,10 +127,6 @@ Because [*almost* everything in JavaScript is an object](https://github.com/geti
 
 [david-img]: https://img.shields.io/david/darkobits/interface.svg?style=flat-square
 [david-url]: https://david-dm.org/darkobits/interface
-
-[minified-img]: http://img.badgesize.io/https://unpkg.com/@darkobits/interface/dist/interface.min.js?label=minified&style=flat-square
-[gzipped-img]: http://img.badgesize.io/https://unpkg.com/@darkobits/interface/dist/interface.min.js?compression=gzip&label=gzipped&style=flat-square
-[unpkg-url]: https://unpkg.com/@darkobits/formation@1.0.0-beta.4/dist/
 
 [codacy-img]: https://img.shields.io/codacy/coverage/9784926ef8bd4cefb583aedcac7e00f2.svg?style=flat-square
 [codacy-url]: https://www.codacy.com/app/darkobits/interface
